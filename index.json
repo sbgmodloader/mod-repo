@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-04-14",
+  "mods": [
+    {
+      "id": "example-desert-course",
+      "name": "Example Desert Course",
+      "author": "ModCreator",
+      "version": "1.0.0",
+      "description": "A sample 9-hole desert themed golf course showcasing the Map Maker tool. Features challenging sand hazards and strategic hole layouts.",
+      "type": "map",
+      "downloads": 0,
+      "rating": 0.0,
+      "ratingCount": 0,
+      "featured": true,
+      "updatedDate": "2026-04-14",
+      "tags": ["desert", "9-hole", "beginner-friendly", "example"],
+      "thumbnailUrl": "https://sbgmods.github.io/repository/thumbs/example-desert-course.jpg",
+      "downloadUrl": "https://sbgmods.github.io/repository/mods/example-desert-course/1.0.0/example-desert-course.zip",
+      "fileSize": 5242880,
+      "minLoaderVersion": "1.0.0"
+    }
+  ]
+}

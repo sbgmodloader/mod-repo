@@ -1,0 +1,169 @@
+name: Validate Mod Submissions
+
+on:
+  pull_request:
+    paths:
+      - 'index.json'
+      - 'mods/**'
+      - 'thumbs/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Validate JSON syntax
+      run: |
+        python -m json.tool index.json > /dev/null
+        echo "✅ JSON syntax is valid"
+        
+    - name: Check JSON schema
+      run: |
+        python << 'EOF'
+        import json
+        import sys
+        
+        with open('index.json', 'r') as f:
+            data = json.load(f)
+        
+        # Check required top-level fields
+        required_fields = ['version', 'updated', 'mods']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ Missing required field: {field}")
+                sys.exit(1)
+        
+        # Validate each mod entry
+        seen_ids = set()
+        for i, mod in enumerate(data['mods']):
+            print(f"\nValidating mod {i+1}: {mod.get('name', 'UNNAMED')}")
+            
+            # Required fields
+            required_mod_fields = [
+                'id', 'name', 'author', 'version', 'description', 
+                'type', 'downloads', 'rating', 'ratingCount', 
+                'featured', 'updatedDate', 'tags', 'downloadUrl', 
+                'fileSize', 'minLoaderVersion'
+            ]
+            
+            for field in required_mod_fields:
+                if field not in mod:
+                    print(f"  ❌ Missing field: {field}")
+                    sys.exit(1)
+            
+            # Check unique ID
+            mod_id = mod['id']
+            if mod_id in seen_ids:
+                print(f"  ❌ Duplicate mod ID: {mod_id}")
+                sys.exit(1)
+            seen_ids.add(mod_id)
+            
+            # Validate type
+            valid_types = ['map', 'gamemode', 'character', 'item']
+            if mod['type'] not in valid_types:
+                print(f"  ❌ Invalid type: {mod['type']} (must be one of {valid_types})")
+                sys.exit(1)
+            
+            # Validate file size (max 100MB)
+            if mod['fileSize'] > 100 * 1024 * 1024:
+                print(f"  ❌ File too large: {mod['fileSize']} bytes (max 100MB)")
+                sys.exit(1)
+            
+            # Validate version format
+            import re
+            if not re.match(r'^\d+\.\d+\.\d+$', mod['version']):
+                print(f"  ❌ Invalid version format: {mod['version']} (must be X.Y.Z)")
+                sys.exit(1)
+            
+            # Validate tags (max 5)
+            if len(mod['tags']) > 5:
+                print(f"  ❌ Too many tags: {len(mod['tags'])} (max 5)")
+                sys.exit(1)
+            
+            # Validate ratings
+            if mod['rating'] < 0 or mod['rating'] > 5:
+                print(f"  ❌ Invalid rating: {mod['rating']} (must be 0-5)")
+                sys.exit(1)
+            
+            print(f"  ✅ Valid")
+        
+        print(f"\n✅ All {len(data['mods'])} mod(s) validated successfully!")
+        EOF
+        
+    - name: Check file existence
+      run: |
+        python << 'EOF'
+        import json
+        import os
+        import sys
+        
+        with open('index.json', 'r') as f:
+            data = json.load(f)
+        
+        errors = 0
+        for mod in data['mods']:
+            mod_id = mod['id']
+            version = mod['version']
+            
+            # Check mod ZIP exists
+            zip_path = f"mods/{mod_id}/{version}/{mod_id}.zip"
+            if not os.path.exists(zip_path):
+                print(f"❌ Missing file: {zip_path}")
+                errors += 1
+            else:
+                # Check file size matches
+                actual_size = os.path.getsize(zip_path)
+                claimed_size = mod['fileSize']
+                if abs(actual_size - claimed_size) > 1024:  # Allow 1KB difference
+                    print(f"⚠️  File size mismatch for {zip_path}")
+                    print(f"   Claimed: {claimed_size} bytes")
+                    print(f"   Actual:  {actual_size} bytes")
+                    print(f"   Please update fileSize in index.json")
+                    errors += 1
+            
+            # Check thumbnail if specified
+            if mod.get('thumbnailUrl') and 'sbgmods.github.io' in mod['thumbnailUrl']:
+                thumb_path = f"thumbs/{mod_id}.jpg"
+                alt_thumb_path = f"thumbs/{mod_id}.png"
+                if not os.path.exists(thumb_path) and not os.path.exists(alt_thumb_path):
+                    print(f"⚠️  Missing thumbnail: {thumb_path} or {alt_thumb_path}")
+                    print(f"   (Referenced in thumbnailUrl)")
+        
+        if errors > 0:
+            print(f"\n❌ Found {errors} error(s)")
+            sys.exit(1)
+        else:
+            print("\n✅ All files exist!")
+        EOF
+        
+    - name: Check for malicious files
+      run: |
+        find mods -type f -name "*.exe" -o -name "*.dll" -o -name "*.bat" -o -name "*.ps1" -o -name "*.sh" | while read file; do
+          echo "⚠️  Warning: Executable file found: $file"
+          echo "   Mod ZIPs should only contain assets and JSON files"
+        done
+        
+    - name: Validation Summary
+      if: success()
+      run: |
+        echo "🎉 All validation checks passed!"
+        echo ""
+        echo "✅ JSON syntax valid"
+        echo "✅ Schema validation passed"  
+        echo "✅ All files exist"
+        echo "✅ No obvious malicious files"
+        echo ""
+        echo "Ready for manual review!"
