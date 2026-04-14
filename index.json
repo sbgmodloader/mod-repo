@@ -1,6 +1,50 @@
 {
   "version": "1.0.0",
   "updated": "2026-04-14",
+  "categories": [
+    {
+      "id": "maps",
+      "name": "Maps",
+      "description": "Custom golf courses and levels",
+      "icon": "🏌️"
+    },
+    {
+      "id": "gameplay",
+      "name": "Gameplay",
+      "description": "Mods that change game mechanics, rules, and physics",
+      "icon": "🎮"
+    },
+    {
+      "id": "characters",
+      "name": "Characters",
+      "description": "Custom characters, skins, and cosmetics",
+      "icon": "👤"
+    },
+    {
+      "id": "ui",
+      "name": "UI & HUD",
+      "description": "Interface enhancements and visual tweaks",
+      "icon": "🖥️"
+    },
+    {
+      "id": "audio",
+      "name": "Audio",
+      "description": "Music packs, sound effects, and audio mods",
+      "icon": "🔊"
+    },
+    {
+      "id": "tools",
+      "name": "Tools",
+      "description": "Utilities and helper mods for modders",
+      "icon": "🛠️"
+    },
+    {
+      "id": "content",
+      "name": "Content Packs",
+      "description": "Large bundles with multiple types of content",
+      "icon": "📦"
+    }
+  ],
   "mods": [
     {
       "id": "example-desert-course",
@@ -8,15 +52,15 @@
       "author": "ModCreator",
       "version": "1.0.0",
       "description": "A sample 9-hole desert themed golf course showcasing the Map Maker tool. Features challenging sand hazards and strategic hole layouts.",
-      "type": "map",
+      "category": "maps",
       "downloads": 0,
       "rating": 0.0,
       "ratingCount": 0,
       "featured": true,
       "updatedDate": "2026-04-14",
       "tags": ["desert", "9-hole", "beginner-friendly", "example"],
-      "thumbnailUrl": "https://sbgmods.github.io/repository/thumbs/example-desert-course.jpg",
-      "downloadUrl": "https://sbgmods.github.io/repository/mods/example-desert-course/1.0.0/example-desert-course.zip",
+      "thumbnailUrl": "https://mods.sbgmodloader.com/thumbs/example-desert-course.jpg",
+      "downloadUrl": "https://mods.sbgmodloader.com/mods/example-desert-course/1.0.0/example-desert-course.zip",
       "fileSize": 5242880,
       "minLoaderVersion": "1.0.0"
     }

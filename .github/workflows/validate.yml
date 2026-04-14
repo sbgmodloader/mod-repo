@@ -40,11 +40,21 @@ jobs:
             data = json.load(f)
         
         # Check required top-level fields
-        required_fields = ['version', 'updated', 'mods']
+        required_fields = ['version', 'updated', 'categories', 'mods']
         for field in required_fields:
             if field not in data:
                 print(f"❌ Missing required field: {field}")
                 sys.exit(1)
+        
+        # Validate categories
+        valid_category_ids = set()
+        for category in data.get('categories', []):
+            if 'id' not in category or 'name' not in category:
+                print(f"❌ Category missing required fields (id, name)")
+                sys.exit(1)
+            valid_category_ids.add(category['id'])
+        
+        print(f"✅ Found {len(valid_category_ids)} valid categories: {', '.join(valid_category_ids)}")
         
         # Validate each mod entry
         seen_ids = set()
@@ -54,7 +64,7 @@ jobs:
             # Required fields
             required_mod_fields = [
                 'id', 'name', 'author', 'version', 'description', 
-                'type', 'downloads', 'rating', 'ratingCount', 
+                'category', 'downloads', 'rating', 'ratingCount', 
                 'featured', 'updatedDate', 'tags', 'downloadUrl', 
                 'fileSize', 'minLoaderVersion'
             ]
@@ -71,10 +81,9 @@ jobs:
                 sys.exit(1)
             seen_ids.add(mod_id)
             
-            # Validate type
-            valid_types = ['map', 'gamemode', 'character', 'item']
-            if mod['type'] not in valid_types:
-                print(f"  ❌ Invalid type: {mod['type']} (must be one of {valid_types})")
+            # Validate category
+            if mod['category'] not in valid_category_ids:
+                print(f"  ❌ Invalid category: {mod['category']} (must be one of {valid_category_ids})")
                 sys.exit(1)
             
             # Validate file size (max 100MB)

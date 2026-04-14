@@ -14,10 +14,19 @@ This URL is used by the mod loader's "Browse Mods" feature.
 
 ## 📦 Available Mods
 
-Currently hosting **1** mod(s):
+Currently hosting **1** mod(s) across **7** categories:
+
+### Categories
+- 🏌️ **Maps** - Custom golf courses and levels
+- 🎮 **Gameplay** - Mechanics, rules, and physics mods
+- 👤 **Characters** - Custom characters and skins  
+- 🖥️ **UI & HUD** - Interface enhancements
+- 🔊 **Audio** - Music packs and sound effects
+- 🛠️ **Tools** - Utilities for players and modders
+- 📦 **Content Packs** - Large bundles with multiple content types
 
 ### Featured Mods
-- **Example Desert Course** - A sample 9-hole desert themed course (Map)
+- **Example Desert Course** - A sample 9-hole desert themed course (Maps)
 
 See [index.json](index.json) for the complete catalog.
 

@@ -204,7 +204,7 @@ Open `index.json` and add your mod entry to the `"mods"` array:
       "author": "YourUsername",
       "version": "1.0.0",
       "description": "A detailed, engaging description of what your mod adds to the game. Be specific and highlight unique features!",
-      "type": "map",
+      "category": "maps",
       "downloads": 0,
       "rating": 0.0,
       "ratingCount": 0,
@@ -229,7 +229,7 @@ Open `index.json` and add your mod entry to the `"mods"` array:
 | `author` | ✅ | Your username | `"ModMaster"` |
 | `version` | ✅ | Semantic version | `"1.0.0"` |
 | `description` | ✅ | What it does (100-300 chars) | `"A challenging 9-hole course through an active volcano..."` |
-| `type` | ✅ | Mod category | `"map"`, `"gamemode"`, `"character"`, `"item"` |
+| `category` | ✅ | Mod category | `"maps"`, `"gameplay"`, `"characters"`, `"ui"`, `"audio"`, `"tools"`, `"content"` |
 | `downloads` | ✅ | Start at 0 | `0` |
 | `rating` | ✅ | Start at 0.0 | `0.0` |
 | `ratingCount` | ✅ | Start at 0 | `0` |
@@ -240,6 +240,15 @@ Open `index.json` and add your mod entry to the `"mods"` array:
 | `downloadUrl` | ✅ | URL to ZIP | Full URL as shown |
 | `fileSize` | ✅ | Bytes (from Step 4) | `5242880` |
 | `minLoaderVersion` | ✅ | Min mod loader version | `"1.0.0"` |
+
+**Categories:**
+- `maps` - Custom golf courses and levels
+- `gameplay` - Mechanics changes, rules, physics
+- `characters` - Custom characters, skins, cosmetics
+- `ui` - Interface enhancements and HUD mods
+- `audio` - Music packs and sound effects
+- `tools` - Utilities for players or modders
+- `content` - Large bundles with multiple content types
 
 **URL Templates:**
 ```
